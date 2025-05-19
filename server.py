@@ -3,7 +3,7 @@ import asyncio
 from asyncio import StreamReader, StreamWriter
 from command_registry import COMMANDS
 from parsers import parse_request
-from exeptions import ClientDisconnected
+from exceptions import ClientDisconnected
 
 async def handle_commands(writer: StreamWriter, message: List[bytes]):
     cmd_name = message[0].upper()

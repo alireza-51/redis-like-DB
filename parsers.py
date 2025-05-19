@@ -1,7 +1,7 @@
 from typing import List
 import asyncio
 
-from exeptions import NotValidRESPMessage, ClientDisconnected
+from exceptions import NotValidRESPMessage, ClientDisconnected
 
 async def parse_bulk_string(reader: asyncio.StreamReader) -> bytes | None: 
     length_line = await reader.readline()
