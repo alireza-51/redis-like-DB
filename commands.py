@@ -32,3 +32,15 @@ class GetCommand(Command):
 
         return RESP.encode_bulk_string(data)
 
+class DelCommand(Command):
+    def execute(self, args:List[bytes]) -> bytes:
+        
+        if len(args) != 1:
+            return RESP.encode_error("wrong number of arguments for 'DEL'")
+        
+        key = args[0].decode()
+        try:
+            self._data_store.delete(key=key)
+            return RESP.encode_simple_string('+DEL')
+        except KeyError:
+            return RESP.encode_error(f"'{key}' key not found.")

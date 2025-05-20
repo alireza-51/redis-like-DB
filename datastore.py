@@ -15,3 +15,6 @@ class DataStore:
 
     def set(self, key, value):
         self.data_source[key] = value
+        
+    def delete(self, key):
+        self.data_source.pop(key)
