@@ -5,5 +5,7 @@ from commands import *
 COMMANDS: Dict[bytes, Type[Command]] = {
     b"SET": SetCommand,
     b"GET": GetCommand,
-    b'DEL': DelCommand,
+    b"DEL": DelCommand,
+    b"INCR": IncrCommand,
+    b"INCRBY": IncrByCommand,
 }
