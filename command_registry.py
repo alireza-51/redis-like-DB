@@ -1,11 +1,18 @@
 from typing import Dict, Type
-from commands import *
 
 
-COMMANDS: Dict[bytes, Type[Command]] = {
-    b"SET": SetCommand,
-    b"GET": GetCommand,
-    b"DEL": DelCommand,
-    b"INCR": IncrCommand,
-    b"INCRBY": IncrByCommand,
-}
+COMMANDS: Dict[bytes, Type["Command"]] = {}
+
+def register(command: bytes | None = None):
+    def decorator(cls):
+        key = command or cls.__name__.upper().encode()            
+        if key in COMMANDS:
+            raise ValueError('Command is already registered')
+        
+        COMMANDS[key] = cls
+        
+        return cls
+    return decorator
+
+def init_commands():
+    import commands # noqa: F401
