@@ -15,4 +15,4 @@ def register(command: bytes | None = None):
     return decorator
 
 def init_commands():
-    import commands # noqa: F401
+    import commands.command_set # noqa: F401

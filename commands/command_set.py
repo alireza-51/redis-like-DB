@@ -1,7 +1,7 @@
-from typing import Any, List
-from datastore import DataStore
-from serializers import RESPSerializer as RESP
-from command_registry import register
+from typing import List
+from datastores import DataStore
+from parsers.serializers import RESPSerializer as RESP
+from commands.command_registry import register
 
 
 class Command:

@@ -1,12 +1,12 @@
 from typing import List
 import asyncio
 from asyncio import StreamReader, StreamWriter
-from command_registry import COMMANDS, init_commands
+from commands.command_registry import COMMANDS, init_commands
 from parsers import parse_request
 from exceptions import ClientDisconnected
-from serializers import RESPSerializer as RESP
-from log import logger
-import settings
+from parsers.serializers import RESPSerializer as RESP
+from comfigs.log import logger
+import comfigs.settings as settings
 
 
 async def handle_commands(writer: StreamWriter, message: List[bytes]):

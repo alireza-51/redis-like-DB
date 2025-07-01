@@ -1,5 +1,5 @@
 import logging.config
-import settings
+import comfigs.settings as settings
 
 
 logging.config.dictConfig(settings.LOGGING)
