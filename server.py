@@ -1,9 +1,10 @@
 from typing import List
 import asyncio
 from asyncio import StreamReader, StreamWriter
-from command_registry import COMMANDS
+from command_registry import COMMANDS, init_commands
 from parsers import parse_request
 from exceptions import ClientDisconnected
+from serializers import RESPSerializer as RESP
 from log import logger
 import settings
 
@@ -14,13 +15,12 @@ async def handle_commands(writer: StreamWriter, message: List[bytes]):
 
     cmd_class = COMMANDS.get(cmd_name)
     if not cmd_class:
-        writer.write(b"-ERR unknown command\r\n")
-        await writer.drain()
+        writer.write(RESP.encode_error(f"unknown command '{cmd_name.decode()}'"))
     else:
         cmd = cmd_class()
         response = cmd.execute(args)
         writer.write(response)
-        await writer.drain()
+    await writer.drain()
 
 async def handle_client(reader: StreamReader, writer: StreamWriter):
     addr = writer.get_extra_info('peername')
@@ -40,6 +40,7 @@ async def handle_client(reader: StreamReader, writer: StreamWriter):
     writer.close()
 
 async def main():
+    init_commands()
     server = await asyncio.start_server(
         handle_client, settings.HOST, settings.PORT)
 
