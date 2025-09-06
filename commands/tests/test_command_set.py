@@ -6,37 +6,48 @@ from commands.command_set import (
     DelCommand,
     IncrCommand,
     IncrByCommand,
+    Command,
+    DataStore
 )
 
+@pytest.fixture
+def initialize_datastore():
+    command = Command()
 
-def test_get_command():
-    command = SetCommand()
-    res = command.execute([b'get_key', b'value'])
-    assert res == b'+OK\r\n'
+    command._data_store._instance = None
+    command._data_store = DataStore()
+    
+    command._data_store.set('predefined_key', 'predefined_value')
+    return command
+
+def test_get_command(initialize_datastore):
+    # command = SetCommand()
+    # res = command.execute([b'get_key', b'value'])
+    # assert res == b'+OK\r\n'
     
     command = GetCommand()
-    res = command.execute([b'get_key'])
-    assert res == b'$5\r\nvalue\r\n'
+    res = command.execute([b'predefined_key'])
+    assert res == b'$5\r\npredefined_value\r\n'
 
 
-def test_set_command():
+def test_set_command(initialize_datastore):
     command = SetCommand()
     res = command.execute([b'set_key', b'value'])
     assert res == b'+OK\r\n'
     assert command._data_store.get('set_key') == 'value'
 
-def test_del_command():
-    set_command = SetCommand()
-    res = set_command.execute([b'key', b'value'])
-    assert res == b'+OK\r\n'
-    assert set_command._data_store.get('key') == 'value'
+def test_del_command(initialize_datastore):
+    # set_command = SetCommand()
+    # res = set_command.execute([b'key', b'value'])
+    # assert res == b'+OK\r\n'
+    # assert set_command._data_store.get('key') == 'value'
     
     del_command = DelCommand()
-    res = del_command.execute([b'key'])
+    res = del_command.execute([b'predefined_key'])
     assert res == b'+OK\r\n'
-    assert set_command._data_store.get('key') == None
+    assert del_command._data_store.get('predefined_key') == None
 
-def test_incr_command():
+def test_incr_command(initialize_datastore):
     incr_command = IncrCommand()
     
     # Case of key not in database
@@ -52,7 +63,7 @@ def test_incr_command():
     assert res == b'+OK\r\n'
     
 
-def test_incr_by_command():
+def test_incr_by_command(initialize_datastore):
     incrby_command = IncrByCommand()
     
     # Case of key not in database
